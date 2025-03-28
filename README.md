@@ -31,7 +31,7 @@ GutHub is a simple recipe search application.
 
 1. Start the development server:
    ```bash
-   python app.py 
+   python -m guthub.app
    ```
 
 2. Open your browser and navigate to:
