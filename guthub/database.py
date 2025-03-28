@@ -37,12 +37,6 @@ class Database:
             ))
             self.connection.commit()
 
-    def fetch_all_recipes(self):
-        """Fetch all recipes from the database."""
-        with closing(self.connection.cursor()) as cursor:
-            cursor.execute("SELECT * FROM recipes")
-            return cursor.fetchall()
-
     def fetch_recipe_by_name(self, name):
         """Fetch a recipe by its name."""
         with closing(self.connection.cursor()) as cursor:
@@ -65,44 +59,27 @@ class Database:
                 }
             return None
 
+    def fetch_all_recipes(self):
+        """Fetch all recipes from the database."""
+        with closing(self.connection.cursor()) as cursor:
+            cursor.execute("SELECT * FROM recipes")
+            return cursor.fetchall()
+
     def delete_recipe(self, recipe_id):
-        """Delete a recipe from the database by its ID."""
+        """Delete a recipe by its ID."""
         with closing(self.connection.cursor()) as cursor:
             cursor.execute("DELETE FROM recipes WHERE id = ?", (recipe_id,))
             self.connection.commit()
-            print(f"Recipe with ID {recipe_id} deleted.")
 
-    def update_recipe(self, recipe_id, name=None, url=None, ingredients=None, instructions=None, categories=None):
-        """Update a recipe in the database."""
+    def update_recipe(self, recipe_id, name=None, ingredients=None, instructions=None, categories=None):
+        """Update a recipe's details by its ID."""
         with closing(self.connection.cursor()) as cursor:
-            updates = []
-            params = []
             if name:
-                updates.append("name = ?")
-                params.append(name)
-            if url:
-                updates.append("url = ?")
-                params.append(url)
+                cursor.execute("UPDATE recipes SET name = ? WHERE id = ?", (name, recipe_id))
             if ingredients:
-                updates.append("ingredients = ?")
-                params.append("\n".join(ingredients))
+                cursor.execute("UPDATE recipes SET ingredients = ? WHERE id = ?", ("\n".join(ingredients), recipe_id))
             if instructions:
-                updates.append("instructions = ?")
-                params.append("\n".join(instructions))
+                cursor.execute("UPDATE recipes SET instructions = ? WHERE id = ?", ("\n".join(instructions), recipe_id))
             if categories:
-                updates.append("categories = ?")
-                params.append(", ".join(categories))
-            params.append(recipe_id)
-            query = f"UPDATE recipes SET {', '.join(updates)} WHERE id = ?"
-            cursor.execute(query, tuple(params))
+                cursor.execute("UPDATE recipes SET categories = ? WHERE id = ?", (", ".join(categories), recipe_id))
             self.connection.commit()
-            print(f"Recipe with ID {recipe_id} updated.")
-
-    def search_recipes(self, query):
-        """Search for recipes by name or categories."""
-        with closing(self.connection.cursor()) as cursor:
-            cursor.execute("""
-                SELECT * FROM recipes
-                WHERE name LIKE ? OR categories LIKE ?
-            """, (f"%{query}%", f"%{query}%"))
-            return cursor.fetchall()
