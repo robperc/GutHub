@@ -40,16 +40,17 @@
         </form>
 
         <div class="row mt-5">
-            <div class="col-md-12">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
                 <h3>All Recipes</h3>
-                <ul class="list-group">
-                    {% for recipe in recipes %}
-                    <li class="list-group-item">
-                        <a href="/recipe/{{ recipe[0] }}" class="text-decoration-none">{{ recipe[1] }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <a href="/add_recipe" class="btn btn-primary">Add Recipe</a>
             </div>
+            <ul class="list-group mt-3">
+                {% for recipe in recipes %}
+                <li class="list-group-item">
+                    <a href="/recipe/{{ recipe[0] }}" class="text-decoration-none">{{ recipe[1] }}</a>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 
