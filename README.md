@@ -43,7 +43,7 @@ GutHub is a simple recipe search application.
 
 1. Run the test suite:
    ```bash
-   pytest
+   python -m unittest tests/backend_tests.py 
    ```
 
 2. Ensure all tests pass successfully.
