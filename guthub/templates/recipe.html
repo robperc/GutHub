@@ -24,11 +24,19 @@
             {% endfor %}
         </ul>
         <h3>Instructions</h3>
-        <ol>
+        <p>
             {% for instruction in recipe.instructions %}
-            <p>{{ instruction }}</p>
+            {{ instruction }}
             {% endfor %}
-        </ol>
+        </p>
+        <h3>Categories</h3>
+        <p>
+            {% if recipe.categories %}
+                {{ recipe.categories | join(", ") }}
+            {% else %}
+                No categories provided.
+            {% endif %}
+        </p>
         <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
     </div>
 
