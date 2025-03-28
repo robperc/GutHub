@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from guthub.database import Database
 
 class Recipe:
     def __init__(self, url):
@@ -7,7 +8,7 @@ class Recipe:
         self.url = url
         self.ingredients = []
         self.instructions = []
-        self.categories = [] 
+        self.categories = []
 
     def _extract_text(self, soup, selectors):
         """Helper function to extract and clean text from multiple selectors."""
@@ -54,6 +55,9 @@ class Recipe:
             ]
             self.categories = self._extract_text(soup, category_selectors)
 
+            # Filter out categories with more than 4 words
+            self.categories = [category for category in self.categories if len(category.split()) <= 4]
+
             # Extract ingredients
             ingredient_selectors = [
                 '.ingredient', 
@@ -93,24 +97,16 @@ class Recipe:
         except Exception as e:
             print(f"Error parsing the webpage: {e}")
 
-    def save_to_db(self, db_connection):
-        """Save the recipe to a database."""
+    def save_to_db(self, db: Database):
+        """Save the recipe to the database using the Database class."""
         try:
-            cursor = db_connection.cursor()
-            cursor.execute(
-                """
-                INSERT INTO recipes (name, url, ingredients, instructions, categories)
-                VALUES (?, ?, ?, ?, ?)
-                """,
-                (
-                    self.name,
-                    self.url,
-                    "\n".join(self.ingredients),
-                    "\n".join(self.instructions),
-                    ", ".join(self.categories),
-                ),
+            db.save_recipe(
+                name=self.name,
+                url=self.url,
+                ingredients=self.ingredients,
+                instructions=self.instructions,
+                categories=self.categories
             )
-            db_connection.commit()
             print(f"Recipe '{self.name}' saved to the database.")
         except Exception as e:
             print(f"Error saving recipe to the database: {e}")
