@@ -3,7 +3,7 @@ from guthub.database import Database
 from guthub.recipe import Recipe
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 # Initialize Flask app
 app = Flask(__name__)
