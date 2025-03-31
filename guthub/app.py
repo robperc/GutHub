@@ -6,7 +6,7 @@ import logging
 # logging.basicConfig(level=logging.DEBUG)
 
 # Initialize Flask app with updated template folder
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__, template_folder="../templates")
 
 DATABASE_PATH = "recipes.db"
 
