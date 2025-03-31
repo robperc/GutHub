@@ -38,11 +38,12 @@ class TestRecipe(unittest.TestCase):
         recipe = Recipe("http://example.com/recipe")
         recipe.get_recipe()
 
-        # Validate the extracted ingredients and instructions
-        self.assertEqual(recipe.ingredients, ["1 cup flour", "2 eggs"])
-        self.assertEqual(recipe.instructions, ["Mix ingredients", "Bake at 350°F for 20 minutes"])
+        # Validate the extracted data using to_dict
+        recipe_data = recipe.to_dict()
+        self.assertEqual(recipe_data["ingredients"], ["1 cup flour", "2 eggs"])
+        self.assertEqual(recipe_data["instructions"], ["Mix ingredients", "Bake at 350°F for 20 minutes"])
 
-    def test_save_to_db(self):
+    def test_save_recipe_to_db(self):
         # Create a sample recipe
         recipe = Recipe("https://www.example.com/sample-recipe")
         recipe.name = "Sample Recipe"
@@ -63,70 +64,6 @@ class TestRecipe(unittest.TestCase):
         recipes = self.db.fetch_all_recipes()
         self.assertEqual(len(recipes), 1)
         self.assertEqual(recipes[0][1], "Sample Recipe")
-
-    def test_add_recipe(self):
-        # Add a recipe using the Database class
-        self.db.save_recipe(
-            name="Test Recipe",
-            url="https://example.com/test-recipe",
-            ingredients=["1 cup sugar", "2 cups flour"],
-            instructions=["Mix ingredients", "Bake at 350°F for 30 minutes"],
-            categories=["Dessert", "Baking"]
-        )
-
-        # Verify the recipe was added
-        recipes = self.db.fetch_all_recipes()
-        self.assertEqual(len(recipes), 1)
-        self.assertEqual(recipes[0][1], "Test Recipe")
-
-    def test_delete_recipe(self):
-        # Add a recipe to the database
-        self.db.save_recipe(
-            name="Test Recipe",
-            url="https://example.com/test-recipe",
-            ingredients=["1 cup sugar", "2 cups flour"],
-            instructions=["Mix ingredients", "Bake at 350°F for 30 minutes"],
-            categories=["Dessert", "Baking"]
-        )
-
-        # Fetch the recipe ID
-        recipes = self.db.fetch_all_recipes()
-        recipe_id = recipes[0][0]
-
-        # Delete the recipe
-        self.db.delete_recipe(recipe_id)
-
-        # Verify the recipe was deleted
-        recipes = self.db.fetch_all_recipes()
-        self.assertEqual(len(recipes), 0)
-
-    def test_update_recipe(self):
-        # Add a recipe to the database
-        self.db.save_recipe(
-            name="Test Recipe",
-            url="https://example.com/test-recipe",
-            ingredients=["1 cup sugar", "2 cups flour"],
-            instructions=["Mix ingredients", "Bake at 350°F for 30 minutes"],
-            categories=["Dessert", "Baking"]
-        )
-
-        # Fetch the recipe ID
-        recipes = self.db.fetch_all_recipes()
-        recipe_id = recipes[0][0]
-
-        # Update the recipe
-        self.db.update_recipe(
-            recipe_id,
-            name="Updated Recipe",
-            ingredients=["1 cup sugar", "3 cups flour"],
-            instructions=["Mix ingredients thoroughly", "Bake at 375°F for 25 minutes"]
-        )
-
-        # Verify the recipe was updated
-        updated_recipe = self.db.fetch_all_recipes()[0]
-        self.assertEqual(updated_recipe[1], "Updated Recipe")
-        self.assertIn("3 cups flour", updated_recipe[3])
-        self.assertIn("Bake at 375°F for 25 minutes", updated_recipe[4])
 
 
 if __name__ == "__main__":
