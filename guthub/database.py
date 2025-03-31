@@ -4,7 +4,7 @@ from contextlib import closing
 class Database:
     def __init__(self, db_path="recipes.db", connection=None):
         """Initialize the database connection."""
-        self.connection = connection or sqlite3.connect(db_path, check_same_thread=False)
+        self.connection = connection or sqlite3.connect(db_path)
         self._initialize_database()
 
     def _initialize_database(self):
