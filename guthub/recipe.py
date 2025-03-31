@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from guthub.database import Database
 
 class Recipe:
     def __init__(self, url):
@@ -97,16 +96,12 @@ class Recipe:
         except Exception as e:
             print(f"Error parsing the webpage: {e}")
 
-    def save_to_db(self, db: Database):
-        """Save the recipe to the database using the Database class."""
-        try:
-            db.save_recipe(
-                name=self.name,
-                url=self.url,
-                ingredients=self.ingredients,
-                instructions=self.instructions,
-                categories=self.categories
-            )
-            print(f"Recipe '{self.name}' saved to the database.")
-        except Exception as e:
-            print(f"Error saving recipe to the database: {e}")
+    def to_dict(self):
+        """Return the recipe data as a dictionary."""
+        return {
+            "name": self.name,
+            "url": self.url,
+            "ingredients": self.ingredients,
+            "instructions": self.instructions,
+            "categories": self.categories,
+        }
