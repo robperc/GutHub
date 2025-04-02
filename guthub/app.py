@@ -8,12 +8,10 @@ import logging
 # Initialize Flask app with updated template folder
 app = Flask(__name__, template_folder="../templates")
 
-DATABASE_PATH = "recipes.db"
-
 def get_db():
     """Get or create a database connection for the current request."""
     if "db" not in g:
-        g.db = Database(DATABASE_PATH)
+        g.db = Database()
     return g.db
 
 @app.teardown_appcontext
